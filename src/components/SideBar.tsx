@@ -1,3 +1,5 @@
+import { memo } from "react";
+import { useCallback } from "react";
 import { Button } from "./Button";
 
 interface SideBarProps {
@@ -10,11 +12,16 @@ interface SideBarProps {
   buttonClickCallback: (args: any) => void;
 }
 
-export function SideBar({
+const SideBarComponent = ({
   genres,
   selectedGenreId,
   buttonClickCallback
-}: SideBarProps) {
+}: SideBarProps) => {
+
+  const handleOnClick = useCallback((genreId: number) => {
+    buttonClickCallback(genreId)
+  }, [buttonClickCallback]);
+
   return (
     <nav className="sidebar">
       <span>Watch<p>Me</p></span>
@@ -25,7 +32,8 @@ export function SideBar({
             key={String(genre.id)}
             title={genre.title}
             iconName={genre.name}
-            onClick={() => buttonClickCallback(genre.id)}
+            onClick={handleOnClick}
+            id={genre.id}
             selected={selectedGenreId === genre.id}
           />
         ))}
@@ -34,3 +42,5 @@ export function SideBar({
     </nav>
   )
 }
+
+export const SideBar = memo(SideBarComponent);
